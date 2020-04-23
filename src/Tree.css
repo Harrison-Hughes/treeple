@@ -1,0 +1,8 @@
+svg {
+  border: 1px solid black;
+}
+
+.svgContainer {
+  width: 70%;
+  margin: 0 auto;
+}

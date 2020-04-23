@@ -1,7 +1,7 @@
 import React from "react";
 import "./Tree.css";
 
-const Rectangles = ({ input }) => {
+const Rectangles = ({ x, y, colours }) => {
   const rectangleGenerator = ({ x, y, colours }) => {
     let [output, colourIndex] = [[], 0];
     for (let row = 1; row <= y; row++) {
@@ -30,9 +30,9 @@ const Rectangles = ({ input }) => {
       <div className="svgContainer">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 62.5">
           {rectangleGenerator({
-            x: 8,
-            y: 8,
-            colours: ["black", "white", "yellow"],
+            x: x,
+            y: y,
+            colours: colours,
           })}
         </svg>
       </div>

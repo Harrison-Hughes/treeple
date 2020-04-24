@@ -3,9 +3,9 @@ import React from "react";
 const Node = ({ x, y, r, text }) => {
   return (
     <>
-      <circle cx={x} cy={y} r={r} stroke="black" stroke-width="3" />
+      <circle cx={x} cy={y} r={r} stroke="black" strokeWidth="0.1" />
       <g
-        fontSize={8}
+        fontSize={4}
         fontFamily="sans-serif"
         fill="black"
         stroke="none"

@@ -31,6 +31,9 @@ const data3 = {
 function App() {
   return (
     <div className="App">
+      <h1>App</h1>
+      <Tree input={data1} />
+      <Tree input={data2} />
       <Tree input={data3} />
     </div>
   );

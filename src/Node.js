@@ -1,18 +1,24 @@
 import React from "react";
 
-const Node = ({ x, y, r, text }) => {
+const Node = ({ children, x, y, r }) => {
   return (
     <>
-      <circle cx={x} cy={y} r={r} stroke="black" strokeWidth="0.1" />
+      <circle
+        cx={x}
+        cy={y}
+        r={!!r ? r : 0.5}
+        stroke="black"
+        strokeWidth="0.1"
+      />
       <g
-        fontSize={4}
+        fontSize={3}
         fontFamily="sans-serif"
         fill="black"
         stroke="none"
-        textAnchor="middle"
+        textAnchor="left"
       >
         <text x={x} y={y}>
-          {text}
+          {children}
         </text>
       </g>
     </>

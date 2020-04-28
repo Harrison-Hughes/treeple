@@ -34,7 +34,13 @@ const genYCoords = (data) => {
 const genXCoords = (data) => {
   let coords = [];
   const distribution = treeScanner(data)["distribution"];
-  for (let tier = 0; tier < distribution; tier++) {}
+  for (let tier = 0; tier < distribution.length; tier++) {
+    let numOfNodes = distribution[tier];
+    coords.push([]);
+    for (let nodeNum = 0; nodeNum < numOfNodes; nodeNum++) {
+      coords[tier].push((100 / (numOfNodes + 1)) * (nodeNum + 1));
+    }
+  }
   return coords;
 };
 
@@ -52,13 +58,20 @@ const renderTiers = (data) => {
 };
 
 const formatInputDataToIncludeCoords = (input) => {
-  const verticalCoords = genXCoords(input);
-  const horizontalCoords = genYCoords(input);
-  let [currData, modifiedData] = [[input], input];
+  const [verticalCoords, horizontalCoords] = [
+    genXCoords(input),
+    genYCoords(input),
+  ];
+  let modifiedData = input;
   for (let tier = 0; tier < horizontalCoords.length; tier++) {
-    currData[0]["y"] = horizontalCoords[tier];
-    // currData = curr["children"];
+    for (let node = 0; node < verticalCoords[tier].length; node++) {
+      console.log("tier, node", tier, node);
+      modifiedData["x"] = verticalCoords[tier][node];
+      modifiedData["y"] = horizontalCoords[tier];
+      console.log("mod data", modifiedData);
+    }
   }
+  console.log("mod data", modifiedData);
   return 0;
 };
 
@@ -76,9 +89,6 @@ const renderBranches = (data) => {
 };
 
 const Tree = ({ input }) => {
-  console.log(genYCoords(input));
-  console.log(formatInputDataToIncludeCoords(input));
-  console.log("distrib", treeScanner(input)["distribution"]);
   return (
     <div className="svgContainer">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 62.5">

@@ -43,7 +43,7 @@ function App() {
       <h1>App</h1>
       {/* <Tree input={data1} />
       <Tree input={data2} /> */}
-      <Tree input={data3} />
+      <Tree input={data3} width={100} height={62.5} />
     </div>
   );
 }

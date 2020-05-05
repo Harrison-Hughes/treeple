@@ -4,8 +4,8 @@ const Node = ({ children, x, y, r }) => {
   return (
     <>
       <circle
-        cx={x}
-        cy={y}
+        cx={`${x}%`}
+        cy={`${y}%`}
         r={!!r ? r : 0.5}
         stroke="black"
         strokeWidth="0.1"
@@ -17,7 +17,7 @@ const Node = ({ children, x, y, r }) => {
         stroke="none"
         textAnchor="left"
       >
-        <text x={x} y={y}>
+        <text x={`${x}%`} y={`${y}%`}>
           {children}
         </text>
       </g>

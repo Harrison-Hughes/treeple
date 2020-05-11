@@ -3,27 +3,87 @@ import Node from "./Node";
 import Branch from "./Branch";
 import "./Tree.css";
 
-const treeScanner = (nodeData) => {
+// const treeScanner = (nodeData) => {
+//   if (typeof nodeData !== "object" || nodeData === null) return 0;
+
+//   const scan = (node, depthCounter, nodeExists) => {
+//     nodeExists(depthCounter, node["id"]);
+//     if (!!node["children"]) {
+//       node["children"].map((node) => scan(node, depthCounter + 1, nodeExists));
+//     }
+//   };
+
+//   let distribution = [];
+//   const registerNode = (depth, id) => {
+//     if (!!distribution[depth]) distribution[depth].push(id);
+//     else distribution[depth] = [id];
+//   };
+//   scan(nodeData, 0, registerNode);
+//   return { depth: distribution.length, distribution: distribution };
+// };
+
+const treeScannerWithPlaceholders = (nodeData) => {
   if (typeof nodeData !== "object" || nodeData === null) return 0;
 
-  const scan = (node, depthCounter, nodeExists) => {
-    nodeExists(depthCounter, node["id"]);
+  const dipstick = (node, depthCounter, registerDepth) => {
+    registerDepth(depthCounter);
     if (!!node["children"]) {
-      node["children"].map((node) => scan(node, depthCounter + 1, nodeExists));
+      node["children"].map((node) =>
+        dipstick(node, depthCounter + 1, registerDepth)
+      );
     }
   };
+
+  const scan = (maxDepth, node, depthCounter, nodeExists) => {
+    nodeExists(depthCounter, node["id"]);
+    if (!!node["children"]) {
+      node["children"].map((node) =>
+        scan(maxDepth, node, depthCounter + 1, nodeExists)
+      );
+    } else if (maxDepth > depthCounter) {
+      console.log(node["id"], "needs a placeholder");
+      for (let i = 1; i <= maxDepth - depthCounter; i++) {
+        nodeExists(depthCounter + i, 0);
+      }
+    }
+  };
+
+  let maxDepth = 0;
+  const registerDepth = (depth) => {
+    if (depth > maxDepth) maxDepth = depth;
+  };
+  dipstick(nodeData, 0, registerDepth);
+  console.log(maxDepth);
 
   let distribution = [];
   const registerNode = (depth, id) => {
     if (!!distribution[depth]) distribution[depth].push(id);
     else distribution[depth] = [id];
   };
-  scan(nodeData, 0, registerNode);
+  scan(maxDepth, nodeData, 0, registerNode);
+  console.log(distribution);
   return { depth: distribution.length, distribution: distribution };
 };
 
-const genCoordsWithIDs = (nodeData) => {
-  const distribution = treeScanner(nodeData)["distribution"];
+// const genCoordsWithIDs = (nodeData) => {
+//   const distribution = treeScannerWithPlaceholders(nodeData)["distribution"];
+//   // input (distribution) -> [[1], [2, 5], [3, 4, 6, 7]]
+//   const depth = distribution.length;
+//   let output = {};
+//   for (let tier = 0; tier < depth; tier++) {
+//     let y = (100 / (depth + 1)) * (tier + 1);
+//     let nodesAcross = distribution[tier].length;
+//     for (let node = 0; node < nodesAcross; node++) {
+//       let x = (100 / (nodesAcross + 1)) * (node + 1);
+//       output[distribution[tier][node]] = { x: x, y: y };
+//     }
+//   }
+//   return output;
+//   // output -> {1: {x: 50, y: 25}, 2: {x: 33.3, y: 50}, ...}
+// };
+
+const genBalancedCoordsWithIDs = (nodeData) => {
+  const distribution = treeScannerWithPlaceholders(nodeData)["distribution"];
   // input (distribution) -> [[1], [2, 5], [3, 4, 6, 7]]
   const depth = distribution.length;
   let output = {};
@@ -90,8 +150,7 @@ const renderBranches = (nodes, coords) => {
 };
 
 const renderDender = (nodeData) => {
-  const coordsOfIDs = genCoordsWithIDs(nodeData);
-  // return renderNodes(nodeData, coordsOfIDs);
+  const coordsOfIDs = genBalancedCoordsWithIDs(nodeData);
   return [
     renderNodes(nodeData, coordsOfIDs),
     renderBranches(nodeData, coordsOfIDs),

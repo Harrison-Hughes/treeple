@@ -41,7 +41,6 @@ const treeScannerWithPlaceholders = (nodeData) => {
         scan(maxDepth, node, depthCounter + 1, nodeExists)
       );
     } else if (maxDepth > depthCounter) {
-      console.log(node["id"], "needs a placeholder");
       for (let i = 1; i <= maxDepth - depthCounter; i++) {
         nodeExists(depthCounter + i, 0);
       }
@@ -53,7 +52,6 @@ const treeScannerWithPlaceholders = (nodeData) => {
     if (depth > maxDepth) maxDepth = depth;
   };
   dipstick(nodeData, 0, registerDepth);
-  console.log(maxDepth);
 
   let distribution = [];
   const registerNode = (depth, id) => {
@@ -61,28 +59,10 @@ const treeScannerWithPlaceholders = (nodeData) => {
     else distribution[depth] = [id];
   };
   scan(maxDepth, nodeData, 0, registerNode);
-  console.log(distribution);
   return { depth: distribution.length, distribution: distribution };
 };
 
-// const genCoordsWithIDs = (nodeData) => {
-//   const distribution = treeScannerWithPlaceholders(nodeData)["distribution"];
-//   // input (distribution) -> [[1], [2, 5], [3, 4, 6, 7]]
-//   const depth = distribution.length;
-//   let output = {};
-//   for (let tier = 0; tier < depth; tier++) {
-//     let y = (100 / (depth + 1)) * (tier + 1);
-//     let nodesAcross = distribution[tier].length;
-//     for (let node = 0; node < nodesAcross; node++) {
-//       let x = (100 / (nodesAcross + 1)) * (node + 1);
-//       output[distribution[tier][node]] = { x: x, y: y };
-//     }
-//   }
-//   return output;
-//   // output -> {1: {x: 50, y: 25}, 2: {x: 33.3, y: 50}, ...}
-// };
-
-const genBalancedCoordsWithIDs = (nodeData) => {
+const genCoordsWithIDs = (nodeData) => {
   const distribution = treeScannerWithPlaceholders(nodeData)["distribution"];
   // input (distribution) -> [[1], [2, 5], [3, 4, 6, 7]]
   const depth = distribution.length;
@@ -150,10 +130,10 @@ const renderBranches = (nodes, coords) => {
 };
 
 const renderDender = (nodeData) => {
-  const coordsOfIDs = genBalancedCoordsWithIDs(nodeData);
+  let coordsOfIDs = genCoordsWithIDs(nodeData);
   return [
-    renderNodes(nodeData, coordsOfIDs),
     renderBranches(nodeData, coordsOfIDs),
+    renderNodes(nodeData, coordsOfIDs),
   ].map((x) => x);
 };
 
